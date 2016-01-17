@@ -14,7 +14,7 @@ You probably already know this but install it with: `npm install --save susie`
 First load and register the plugin:
 
 ```javascript
-server.register(require('susie'), function (err) {
+server.register(require('susie'), (err) => {
     ...
 });
 ```
@@ -25,11 +25,9 @@ In a route handler you can now call `reply.event()` to start an SSE response:
 
 ```javascript
 server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-
-        reply.event({ data: 'my data' });
+        method: 'GET',
+        path: '/',
+        handler: (request, reply) => reply.event({ data: 'my data' })
     }
 });
 ```
@@ -40,11 +38,11 @@ The first time you call `reply.event()`, appropriate HTTP response headers will 
 server.route({
     method: 'GET',
     path: '/',
-    handler: function (request, reply) {
+    handler: (request, reply) => {
 
         reply.event({ id: 1, data: 'my data' });
 
-        setTimeout(function () {
+        setTimeout(() => {
 
             reply.event({ id: 2, data: { a: 1 } }); // object datum
         }, 500);
@@ -61,13 +59,13 @@ A really nice way to provide an EventSource is using a ReadableStream. This is r
 server.route({
     method: 'GET',
     path: '/',
-    handler: function (request, reply) {
+    handler: (request, reply) => {
 
-        var Readable = require('stream').Readable;
-        var rs = Readable();
+        const Readable = require('stream').Readable;
+        let rs = Readable();
 
-        var c = 97;
-        rs._read = function () {
+        const c = 97;
+        rs._read = () => {
             rs.push(String.fromCharCode(c++));
             if (c > 'z'.charCodeAt(0)) rs.push(null);
         };
@@ -84,10 +82,10 @@ Each chunk coming off the stream will be sent as an event. The content of the ch
 server.route({
     method: 'GET',
     path: '/',
-    handler: function (request, reply) {
+    handler: (request, reply) => {
 
-        var i = 0;
-        var generateId = function (chunk) { return i += 10; }
+        let i = 0;
+        const generateId = (chunk) => { return i += 10; }
         reply.event(stream, null, { event: 'update', generateId: generateId });
     }
 });
