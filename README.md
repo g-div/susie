@@ -19,6 +19,20 @@ server.register(require('susie'), (err) => {
 });
 ```
 
+Or if you want to pass options to the plugin:
+```javascript
+server.register([{
+        register: require('susie'),
+        options: {
+            heartbeat: 2000
+        }
+    }], (err) => {
+```
+
+**Options:**
+
+-`heartbeat`: the interval in ms between heartbeats. Disabled by default.
+
 #### With event objects
 
 In a route handler you can now call `reply.event()` to start an SSE response:
